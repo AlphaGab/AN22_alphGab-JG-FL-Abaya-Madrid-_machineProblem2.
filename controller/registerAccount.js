@@ -1,7 +1,9 @@
 const bcrypt = require('bcrypt');
 const user = require("../model/userModel")
-const registerAccount = async(req,res)=>{
 
+
+
+const registerAccount = async(req,res)=>{
 try{
     const{Email,Password,isAdmin} = req.body
     const hashpassword = await bcrypt.hash(Password,10)
@@ -17,7 +19,6 @@ async function checkEmail(req,res,next) {
     try {
         const{Email,Password,isAdmin}= req.body
       const userEmail = await user.findOne({ Email: Email });
-      console.log(userEmail)
      if(userEmail){
         res.send("Email Exists")
      }
