@@ -6,24 +6,23 @@ const authenticateLogin = async(req,res)=>{
 const { Email, Password } = req.body;
 
 try {
-  // Find user by email
+ 
   const user = await userModel.findOne({ Email:Email });
   if (!user) {
     return res.status(401).json({ message: 'Invalid email or password' });
   }
   console.log("here")
 
-  // Compare passwords
+
   const isPasswordValid = await bcrypt.compare(Password, user.Password);
   if (!isPasswordValid) {
     return res.status(401).json({ message: 'Invalid email or password' });
     
   }
 
-  // Generate JWT token
   const token = jwt.sign({ userId: user._id }, 'secret_key');
 
-  // Send token as response
+
   res.json({ token });
 } catch (error) {
   console.error(error);
@@ -42,7 +41,7 @@ const authenticateToken = (req, res, next) => {
       req.user = decoded.userId; 
       next()
     } catch (error) {
-      return res.status(403).json({ message: 'Invalid token' });
+      return res.status(401).json({ message: 'Invalid token',access:'false'});
     }
   };
   const isAdmin = async(req,res,next)=>{
@@ -55,9 +54,22 @@ const authenticateToken = (req, res, next) => {
         next()
       }
       else
-        res.send("Admin Access Only")  
+        res.status(403).json({message:"Unauthorize Request"})
     } catch (error) {
     console.log("Error")
     }
   }
-  module.exports ={isAdmin,authenticateLogin,authenticateToken}
+  const isNotAdmin = async(req,res,next)=>{
+    try {
+      const userId= req.user
+      const data = await userModel.findOne({ _id: userId });
+      if(data.isAdmin ==false){
+        next()
+      }
+      else
+        res.status(403).json({message:"Unauthorize Request"})
+    } catch (error) {
+    console.log(error)
+    }
+  }
+  module.exports ={isAdmin,authenticateLogin,authenticateToken,isNotAdmin}

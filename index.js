@@ -2,6 +2,7 @@ const express = require("express");
 const mongoose = require("mongoose")
 const loginRoute = require("./routes/loginRoute")
 const productRoute = require("./routes/productsRoute")
+const userOrderRoute = require("./routes/usersOrderRoute")
 const app = express();
 const port = 4000
 
@@ -17,7 +18,7 @@ mongoose.connect(
 
 app.use("/login",loginRoute)
 app.use("/products",productRoute)
-
+app.use("/users",userOrderRoute)
 app.get("/",async(req,res)=>{
   res.send("Hello")
 })

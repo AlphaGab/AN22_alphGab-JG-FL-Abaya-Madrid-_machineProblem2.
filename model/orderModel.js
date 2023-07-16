@@ -31,12 +31,12 @@ const orderSchema = new mongoose.Schema({
       },
     ],
     totalAmount: {
-      type: Number,
-      required: true,
+      type: Number
     },
     purchasedOn: {
       type: Date,
       default: Date.now,
     },
   });
-  
+const orderModel =  mongoose.model("orders",orderSchema)
+module.exports = orderModel
